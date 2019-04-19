@@ -5,8 +5,9 @@ class SongItem extends StatelessWidget {
   final title;
   final artist;
   final image;
+  final audioPath;
 
-  SongItem(this.title, this.artist, this.image);
+  SongItem(this.title, this.artist, this.image, this.audioPath);
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -14,7 +15,7 @@ class SongItem extends StatelessWidget {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => DetailedScreen(title, artist, image)));
+                builder: (context) => DetailedScreen(title, artist, image, audioPath)));
       },
       child: Padding(
         padding: const EdgeInsets.only(bottom: 16.0),
@@ -113,7 +114,6 @@ class SongItem extends StatelessWidget {
                       ),
                       child: Center(
                         child: Icon(Icons.add),
-
                       ),
                   ),
                 )

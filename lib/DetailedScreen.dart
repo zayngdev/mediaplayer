@@ -5,14 +5,14 @@ import "StyleSheet.dart";
 
 import 'package:audioplayers/audio_cache.dart';
 import 'package:audioplayers/audioplayers.dart';
-import 'TimeUtil.dart';
 
 class DetailedScreen extends StatefulWidget {
   final title;
   final artist;
   final image;
+  final audioPath;
 
-  DetailedScreen(this.title, this.artist, this.image);
+  DetailedScreen(this.title, this.artist, this.image, this.audioPath);
 
   @override
   State<StatefulWidget> createState() {
@@ -35,8 +35,6 @@ class DetailedScreenState extends State<DetailedScreen> {
   void initState() {
     super.initState();
     currentSecond = 0;
-    durationSeconds = 0;
-    durationStirng = "00:00";
     isPlaying = false;
     initPlayer();
   }
@@ -77,124 +75,114 @@ class DetailedScreenState extends State<DetailedScreen> {
 
   Widget playButton(String audioPath) {
     return Container(
-        decoration: BoxDecoration(
-            color: pinkColor, borderRadius: BorderRadius.circular(40.0)),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: IconButton(
-              icon: Icon(
-                this.isPlaying != true ? Icons.play_arrow : Icons.pause,
-                size: 35.0,
-                color: Colors.white,
-              ),
-              onPressed: () {
-                setState(() {
-                  if (!this.isPlaying) {
-                    audioCache.play(audioPath);
-                    this.isPlaying = true;
-                  } else {
-                    audioPlayer.pause();
-                    this.isPlaying = false;
-                  }
-                });
-              }),
+        child: Center(
+            child: IconButton(
+                icon: Icon(
+                  this.isPlaying != true ? Icons.play_arrow : Icons.pause,
+                  size: 35.0,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  setState(() {
+                    if (!this.isPlaying) {
+                      audioCache.play(audioPath);
+                      this.isPlaying = true;
+                    } else {
+                      audioPlayer.pause();
+                      this.isPlaying = false;
+                    }
+                  });
+                }),
         ));
+  }
+
+ Future<bool> _onBackPressed(){
+    if(this.isPlaying)
+    {
+      audioPlayer.stop();
+    }
+
+    return new Future<bool>.value(true);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: blueColor,
-      body: Column(
-        children: <Widget>[
-          Container(
-            height: 500.0,
-            child: Stack(
-              children: <Widget>[
-                Container(
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                          image: AssetImage(widget.image), fit: BoxFit.cover)),
-                  
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                        colors: [blueColor.withOpacity(0.4), blueColor],
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter),
+    return WillPopScope(
+      onWillPop: _onBackPressed,
+          child: Scaffold(
+        backgroundColor: blueColor,
+        body: Column(
+          children: <Widget>[
+            Container(
+              height: 500.0,
+              child: Stack(
+                children: <Widget>[
+                  Container(
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: AssetImage(widget.image), fit: BoxFit.cover)),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Spacer(),
-                      Text(widget.title,
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                          colors: [blueColor.withOpacity(0.4), blueColor],
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Spacer(),
+                        Text(widget.title,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 32.0)),
+                        SizedBox(
+                          height: 3.0,
+                        ),
+                        Text(
+                          widget.artist,
                           style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 32.0)),
-                      SizedBox(
-                        height: 3.0,
-                      ),
-                      Text(
-                        widget.artist,
-                        style: TextStyle(
-                            color: Colors.white.withOpacity(0.6),
-                            fontSize: 18.0),
-                      ),
-                      SizedBox(height: 16.0),
-                    ],
-                  ),
+                              color: Colors.white.withOpacity(0.6),
+                              fontSize: 18.0),
+                        ),
+                        SizedBox(height: 16.0),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+            SizedBox(height: 42.0),
+         
+            slider(),
+           
+            Spacer(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Icon(
+                  Icons.fast_rewind,
+                  color: Colors.white54,
+                  size: 30.0,
+                ),
+                SizedBox(width: 32.0),
+                playButton(widget.audioPath),
+                SizedBox(width: 32.0),
+                Icon(
+                  Icons.fast_forward,
+                  color: Colors.white54,
+                  size: 30.0,
                 )
               ],
             ),
-          ),
-          SizedBox(height: 42.0),
-          // Slider(
-          //   onChanged: (double value) {},
-          //   value: 0.2,
-          //   activeColor: pinkColor,
-          // ),
-          slider(),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(
-                  // start time
-                  "00:00",
-                  style: TextStyle(color: Colors.white.withOpacity(0.7)),
-                ),
-                Text(durationStirng, // duration
-                    style: TextStyle(color: Colors.white.withOpacity(0.7)))
-              ],
-            ),
-          ),
-          Spacer(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Icon(
-                Icons.fast_rewind,
-                color: Colors.white54,
-                size: 30.0,
-              ),
-              SizedBox(width: 32.0),
-              playButton("audio.mp3"),
-              SizedBox(width: 32.0),
-              Icon(
-                Icons.fast_forward,
-                color: Colors.white54,
-                size: 30.0,
-              )
-            ],
-          ),
-          Spacer(),
-        ],
+            Spacer(),
+          ],
+        ),
       ),
     );
   }
