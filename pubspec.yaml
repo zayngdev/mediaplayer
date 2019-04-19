@@ -1,4 +1,4 @@
-name: dribbble_18
+name: flutter_music_palyer
 description: A new Flutter project.
 
 # The following defines the version and build number for your application.
@@ -8,9 +8,6 @@ description: A new Flutter project.
 # build by specifying --build-name and --build-number, respectively.
 # Read more about versioning at semver.org.
 version: 1.0.0+1
-
-environment:
-  sdk: ">=2.0.0-dev.68.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -39,10 +36,6 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-   - assets/images/orange.jpg
-   - assets/images/pink.jpg
-   - assets/images/yellow.jpg
-   - assets/images/blue.jpg
    - assets/
 
 

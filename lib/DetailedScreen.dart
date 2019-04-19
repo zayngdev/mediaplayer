@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import "StyleSheet.dart";
 
@@ -67,8 +69,7 @@ class DetailedScreenState extends State<DetailedScreen> {
   }
 
   void seekToSecond(int second) {
-    if(!isPlaying)
-      return;
+    if (!isPlaying) return;
 
     Duration newDuration = Duration(seconds: second);
     audioPlayer.seek(newDuration);
@@ -81,28 +82,22 @@ class DetailedScreenState extends State<DetailedScreen> {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: IconButton(
-            icon: Icon(
-              this.isPlaying != true? 
-                Icons.play_arrow : Icons.pause,
-              size: 35.0,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              setState(() {
-                  if(!this.isPlaying)
-                  {
-                     audioCache.play(audioPath); 
-                     this.isPlaying = true;
-                  }
-                  else 
-                  {
+              icon: Icon(
+                this.isPlaying != true ? Icons.play_arrow : Icons.pause,
+                size: 35.0,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                setState(() {
+                  if (!this.isPlaying) {
+                    audioCache.play(audioPath);
+                    this.isPlaying = true;
+                  } else {
                     audioPlayer.pause();
                     this.isPlaying = false;
                   }
-              });
-            }
-
-          ),
+                });
+              }),
         ));
   }
 
@@ -119,8 +114,8 @@ class DetailedScreenState extends State<DetailedScreen> {
                 Container(
                   decoration: BoxDecoration(
                       image: DecorationImage(
-                          image: NetworkImage(widget.image),
-                          fit: BoxFit.cover)),
+                          image: AssetImage(widget.image), fit: BoxFit.cover)),
+                  
                 ),
                 Container(
                   decoration: BoxDecoration(
@@ -133,23 +128,8 @@ class DetailedScreenState extends State<DetailedScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12.0),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      SizedBox(height: 40.0),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Container(
-                            decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.1),
-                                borderRadius: BorderRadius.circular(10.0)),
-                            child: Icon(
-                              Icons.arrow_back,
-                              color: Colors.white,
-                              size: 25,
-                            ),
-                          ),
-                        ],
-                      ),
                       Spacer(),
                       Text(widget.title,
                           style: TextStyle(
